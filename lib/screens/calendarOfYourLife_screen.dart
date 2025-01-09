@@ -1,6 +1,7 @@
 import 'package:calendar_of_life/controllers/calendar_controller.dart';
 import 'package:calendar_of_life/widgets/life_calendar.dart'; // Make sure this is implemented
 import 'package:calendar_of_life/widgets/option_calendar.dart';
+import 'package:calendar_of_life/widgets/year_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -45,7 +46,9 @@ class CalendarOfYourLifeScreen extends StatelessWidget {
                             maxWidth: constraints.maxWidth,
                           );
                         case 'year':
-                        // return const YearCalendar(); // Implement this
+                          return const YearCalendar(
+                            maxWidth: 72,
+                          ); // Implement this
                         case 'month':
                         // return const MonthCalendar(); // Implement this
                         case 'week':
