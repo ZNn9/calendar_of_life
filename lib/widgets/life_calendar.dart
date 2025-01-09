@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer' as developer;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -16,16 +19,21 @@ class LifeCalendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<List<int>>>(
-      future: _calculateLifeCalendar(ageStop, currentAge),
+      future: compute(_calculateLifeCalendar,
+          {'ageStop': ageStop, 'currentAge': currentAge}),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: LoadingIndicator());
+          return const Center(
+              child:
+                  CircularProgressIndicator()); // Hiển thị trạng thái đang tải
         } else if (snapshot.hasError) {
-          return Center(child: Text('Lỗi: ${snapshot.error}'));
+          return Center(
+              child: Text('Lỗi: ${snapshot.error}')); // Hiển thị lỗi nếu có
         } else if (snapshot.hasData) {
-          return _buildLifeGrid(snapshot.data!);
+          return _buildLifeGrid(snapshot.data!); // Hiển thị GridView
         } else {
-          return const Center(child: Text('Không có dữ liệu'));
+          return const Center(
+              child: Text('Không có dữ liệu')); // Trường hợp không có dữ liệu
         }
       },
     );
@@ -64,9 +72,13 @@ class LifeCalendar extends StatelessWidget {
     );
   }
 
-  Future<List<List<int>>> _calculateLifeCalendar(
-      int ageStop, int currentAge) async {
-    // await Future.delayed(const Duration(milliseconds: 100));
+  static Future<List<List<int>>> _calculateLifeCalendar(
+      Map<String, int> params) async {
+    developer.log('Bắt đầu xây dựng Girdview Life Calendar',
+        name: 'LifeCalendar');
+    int ageStop = params['ageStop']!;
+    int currentAge = params['currentAge']!;
+
     List<List<int>> lifeCalendar =
         List.generate(ageStop, (y) => List.generate(52, (x) => 0));
 
@@ -83,10 +95,12 @@ class LifeCalendar extends StatelessWidget {
       }
     }
 
+    developer.log('Kết thúc xây dựng Girdview Life Calendar',
+        name: 'LifeCalendar');
     return lifeCalendar;
   }
 
-  int _calculateCurrentWeek(DateTime date) {
+  static int _calculateCurrentWeek(DateTime date) {
     int dayOfYear = int.parse(DateFormat("D").format(date));
     return ((dayOfYear - date.weekday + 10) / 7).floor();
   }
@@ -100,14 +114,5 @@ class LifeCalendar extends StatelessWidget {
       default:
         return Colors.grey[100]!;
     }
-  }
-}
-
-class LoadingIndicator extends StatelessWidget {
-  const LoadingIndicator({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const CircularProgressIndicator();
   }
 }
