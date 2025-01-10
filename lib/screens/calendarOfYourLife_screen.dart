@@ -1,6 +1,7 @@
 import 'package:calendar_of_life/controllers/calendar_controller.dart';
 import 'package:calendar_of_life/widgets/life_calendar.dart'; // Make sure this is implemented
 import 'package:calendar_of_life/widgets/option_calendar.dart';
+import 'package:calendar_of_life/widgets/week_calendar.dart';
 import 'package:calendar_of_life/widgets/year_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -50,7 +51,12 @@ class CalendarOfYourLifeScreen extends StatelessWidget {
                             maxWidth: constraints.maxWidth,
                           ); // Implement this
                         case 'month':
-                        // return const MonthCalendar(); // Implement this
+                          return MonthCalendar(
+                            month: DateTime.now(), // Tháng hiện tại
+                            maxWidth: MediaQuery.of(context)
+                                .size
+                                .width, // Chiều rộng màn hình
+                          ); // Implement this
                         case 'week':
                         // return const WeekCalendar(); // Implement this
                         case 'day':

@@ -24,7 +24,27 @@ class YearCalendar extends StatelessWidget {
           return Center(
               child: Text('Lỗi: ${snapshot.error}')); // Hiển thị lỗi nếu có
         } else if (snapshot.hasData) {
-          return _buildYearGrid(snapshot.data!); // Hiển thị GridView
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: Text(
+                  '${DateTime.now().year}', // Hiển thị năm hiện tại
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue[800],
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: maxWidth, // Ensure the width is defined
+                height: 600, // Set a height that suits your design
+                child: _buildYearGrid(snapshot.data!), // Hiển thị GridView
+              ),
+            ],
+          );
         } else {
           return const Center(
               child: Text('Không có dữ liệu')); // Trường hợp không có dữ liệu
@@ -55,13 +75,13 @@ class YearCalendar extends StatelessWidget {
     List<String> seasons = ["Spring", "Summer", "Autumn", "Winter"];
     List<Color> seasonColors = [
       Colors.green[200]!, // Xuân
-      Colors.yellow[200]!, // Hạ
+      const Color.fromARGB(255, 205, 90, 90)!, // Hạ
       Colors.orange[200]!, // Thu
       Colors.blue[200]!, // Đông
     ];
 
     return GridView.builder(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(15.0),
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 6, // 6 cột (6 phần của mỗi tháng)
