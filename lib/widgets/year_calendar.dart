@@ -61,13 +61,13 @@ class YearCalendar extends StatelessWidget {
     ];
 
     return GridView.builder(
-      padding: const EdgeInsets.all(30.0),
+      padding: const EdgeInsets.all(8.0),
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 6, // 6 cột (6 phần của mỗi tháng)
         childAspectRatio: 1,
         mainAxisSpacing: 8,
-        crossAxisSpacing: 8,
+        crossAxisSpacing: 22,
       ),
       itemCount: 12 * 6, // 12 tháng x 6 phần
       itemBuilder: (context, index) {
@@ -99,7 +99,6 @@ class YearCalendar extends StatelessWidget {
                   : [],
             ),
             alignment: Alignment.center,
-            // Không hiển thị tên tháng nữa
             child: null,
           ),
         );

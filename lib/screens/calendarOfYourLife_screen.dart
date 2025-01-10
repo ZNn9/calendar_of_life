@@ -46,8 +46,8 @@ class CalendarOfYourLifeScreen extends StatelessWidget {
                             maxWidth: constraints.maxWidth,
                           );
                         case 'year':
-                          return const YearCalendar(
-                            maxWidth: 72,
+                          return YearCalendar(
+                            maxWidth: constraints.maxWidth,
                           ); // Implement this
                         case 'month':
                         // return const MonthCalendar(); // Implement this
