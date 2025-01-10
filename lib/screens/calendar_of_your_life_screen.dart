@@ -1,5 +1,6 @@
 import 'package:calendar_of_life/controllers/calendar_controller.dart';
 import 'package:calendar_of_life/widgets/life_calendar.dart'; // Make sure this is implemented
+import 'package:calendar_of_life/widgets/month_calendar.dart';
 import 'package:calendar_of_life/widgets/option_calendar.dart';
 import 'package:calendar_of_life/widgets/week_calendar.dart';
 import 'package:calendar_of_life/widgets/year_calendar.dart';
@@ -49,16 +50,17 @@ class CalendarOfYourLifeScreen extends StatelessWidget {
                         case 'year':
                           return YearCalendar(
                             maxWidth: constraints.maxWidth,
-                          ); // Implement this
+                          );
                         case 'month':
                           return MonthCalendar(
-                            month: DateTime.now(), // Tháng hiện tại
-                            maxWidth: MediaQuery.of(context)
-                                .size
-                                .width, // Chiều rộng màn hình
+                            month: DateTime.now(),
+                            maxWidth: MediaQuery.of(context).size.width,
                           ); // Implement this
                         case 'week':
-                        // return const WeekCalendar(); // Implement this
+                        // return WeekCalendar(
+                        //   weekStartDate: DateTime.now(),
+                        //   maxWidth: MediaQuery.of(context).size.width,
+                        // );
                         case 'day':
                         // return const DayCalendar(); // Implement this
                         default:

@@ -1,5 +1,5 @@
 import 'package:calendar_of_life/firebase_options.dart';
-import 'package:calendar_of_life/screens/calendarOfYourLife_screen.dart';
+import 'package:calendar_of_life/screens/calendar_of_your_life_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

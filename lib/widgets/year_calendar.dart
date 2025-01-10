@@ -17,12 +17,9 @@ class YearCalendar extends StatelessWidget {
       future: compute(_calculateYearCalendar, DateTime.now()),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-              child:
-                  CircularProgressIndicator()); // Hiển thị trạng thái đang tải
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(
-              child: Text('Lỗi: ${snapshot.error}')); // Hiển thị lỗi nếu có
+          return Center(child: Text('Lỗi: ${snapshot.error}'));
         } else if (snapshot.hasData) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -30,7 +27,7 @@ class YearCalendar extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(0.0),
                 child: Text(
-                  '${DateTime.now().year}', // Hiển thị năm hiện tại
+                  '${DateTime.now().year}',
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
@@ -39,24 +36,22 @@ class YearCalendar extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: maxWidth, // Ensure the width is defined
-                height: 600, // Set a height that suits your design
-                child: _buildYearGrid(snapshot.data!), // Hiển thị GridView
+                width: maxWidth,
+                height: 600,
+                child: _buildYearGrid(snapshot.data!),
               ),
             ],
           );
         } else {
-          return const Center(
-              child: Text('Không có dữ liệu')); // Trường hợp không có dữ liệu
+          return const Center(child: Text('Không có dữ liệu'));
         }
       },
     );
   }
 
   Widget _buildYearGrid(List<List<int>> yearCalendar) {
-    double circleSize =
-        maxWidth / 9; // Điều chỉnh kích thước nhỏ hơn để tránh tràn
-    if (circleSize > 40) circleSize = 40; // Giới hạn tối đa kích thước
+    double circleSize = maxWidth / 9;
+    if (circleSize > 40) circleSize = 40;
 
     List<String> months = [
       "Jan",
@@ -74,26 +69,26 @@ class YearCalendar extends StatelessWidget {
     ];
     List<String> seasons = ["Spring", "Summer", "Autumn", "Winter"];
     List<Color> seasonColors = [
-      Colors.green[200]!, // Xuân
-      const Color.fromARGB(255, 205, 90, 90)!, // Hạ
-      Colors.orange[200]!, // Thu
-      Colors.blue[200]!, // Đông
+      Colors.green[200]!,
+      const Color.fromARGB(255, 205, 90, 90)!,
+      Colors.orange[200]!,
+      Colors.blue[200]!,
     ];
 
     return GridView.builder(
       padding: const EdgeInsets.all(15.0),
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 6, // 6 cột (6 phần của mỗi tháng)
+        crossAxisCount: 6,
         childAspectRatio: 1,
         mainAxisSpacing: 8,
         crossAxisSpacing: 22,
       ),
-      itemCount: 12 * 6, // 12 tháng x 6 phần
+      itemCount: 12 * 6,
       itemBuilder: (context, index) {
-        int month = index ~/ 6; // Xác định tháng (0-11)
-        int node = index % 6; // Xác định phần của tháng (0-5)
-        int seasonIndex = month ~/ 3; // Xác định mùa (0-3)
+        int month = index ~/ 6;
+        int node = index % 6;
+        int seasonIndex = month ~/ 3;
         String season = seasons[seasonIndex];
 
         return Tooltip(
@@ -105,9 +100,7 @@ class YearCalendar extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: _getColorForNode(yearCalendar[month][node]),
-              border: Border.all(
-                  color: seasonColors[seasonIndex],
-                  width: 2), // Màu viền theo mùa
+              border: Border.all(color: seasonColors[seasonIndex], width: 2),
               boxShadow: yearCalendar[month][node] == 2
                   ? [
                       BoxShadow(
@@ -130,37 +123,30 @@ class YearCalendar extends StatelessWidget {
     developer.log('Bắt đầu xây dựng GridView Year Calendar',
         name: 'YearCalendar');
 
-    // Tạo mảng 12x6 (12 tháng x 6 phần)
     List<List<int>> yearCalendar = List.generate(
       12, // 12 tháng
-      (month) => List.generate(6, (node) => 0), // 6 phần mỗi tháng
+      (month) => List.generate(6, (node) => 0),
     );
 
-    int currentMonth = now.month - 1; // Chỉ số tháng hiện tại (0-11)
+    int currentMonth = now.month - 1;
     int currentNode =
-        ((now.day - 1) / (getDaysInMonth(now.year, now.month) / 6))
-            .floor(); // Phần hiện tại của tháng (0-5)
+        ((now.day - 1) / (getDaysInMonth(now.year, now.month) / 6)).floor();
 
     for (int month = 0; month < 12; month++) {
       for (int node = 0; node < 6; node++) {
         if (month < currentMonth ||
             (month == currentMonth && node < currentNode)) {
-          yearCalendar[month][node] = 1; // Quá khứ
+          yearCalendar[month][node] = 1;
         }
         if (month == currentMonth && node == currentNode) {
-          yearCalendar[month][node] = 2; // Phần hiện tại
+          yearCalendar[month][node] = 2;
         }
       }
     }
-
-    developer.log('Kết thúc xây dựng GridView Year Calendar',
-        name: 'YearCalendar');
     return yearCalendar;
   }
 
-  // Helper method to calculate the number of days in a month
   static int getDaysInMonth(int year, int month) {
-    // Use the next month and subtract 1 day to find the last day of the current month
     DateTime firstDayNextMonth = DateTime(year, month + 1, 1);
     DateTime lastDayThisMonth = firstDayNextMonth.subtract(Duration(days: 1));
     return lastDayThisMonth.day;
@@ -169,11 +155,11 @@ class YearCalendar extends StatelessWidget {
   Color _getColorForNode(int status) {
     switch (status) {
       case 1:
-        return Colors.blue[300]!; // Quá khứ
+        return Colors.blue[300]!;
       case 2:
-        return Colors.green[400]!; // Phần hiện tại
+        return Colors.green[400]!;
       default:
-        return Colors.grey[200]!; // Tương lai
+        return Colors.grey[200]!;
     }
   }
 }

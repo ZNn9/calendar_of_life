@@ -1,50 +1,45 @@
 import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 
-class MonthCalendar extends StatelessWidget {
-  final DateTime month; // The first day of the month to display
+class WeekCalendar extends StatelessWidget {
+  final DateTime weekStartDate; // Ngày bắt đầu của tuần
   final double maxWidth;
 
-  const MonthCalendar({
+  const WeekCalendar({
     Key? key,
-    required this.month,
+    required this.weekStartDate,
     required this.maxWidth,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    List<List<DateTime?>> weeks = _generateMonthWeeks(month);
+    List<DateTime> week = _generateWeek(weekStartDate);
 
-    double circleSize = maxWidth / 9; // Calculate node size
-    if (circleSize > 50) circleSize = 50; // Limit maximum size
+    double circleSize = maxWidth / 9; // Cân chỉnh kích thước các node
+    if (circleSize > 40) circleSize = 40; // Giới hạn kích thước node
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Display Month and Year title in numerical format (e.g., "01/2025")
+        // Hiển thị tuần và năm
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          padding: const EdgeInsets.all(8.0),
           child: Text(
-            "${month.month.toString().padLeft(2, '0')}/${month.year}",
+            "Week ${getWeekOfYear(weekStartDate)} - ${weekStartDate.month}/${weekStartDate.year}",
             style: const TextStyle(
-              fontSize: 20,
+              fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: Color.fromARGB(255, 5, 121, 255),
             ),
           ),
         ),
-        // Display weekday headers
+        // Hiển thị các node cho 7 ngày trong tuần
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: _buildWeekdayHeaders(circleSize),
-        ),
-        // Display weeks of the month
-        Column(
-          children: weeks.map((week) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: week.map((day) {
-                return _buildDayNode(day, circleSize);
-              }).toList(),
+          children: week.map((day) {
+            return Flexible(
+              flex: 1,
+              child: _buildDayNode(day, circleSize),
             );
           }).toList(),
         ),
@@ -52,62 +47,50 @@ class MonthCalendar extends StatelessWidget {
     );
   }
 
-  // Determine the status of the day (past, present, future)
-  int _getDayStatus(DateTime day) {
-    DateTime today = DateTime.now();
-    DateTime currentDayOnly = DateTime(
-        today.year, today.month, today.day); // Chỉ lấy ngày, tháng và năm
-
-    // Log for debugging
-    developer.log('Checking day: $day, today: $today', name: 'MonthCalendar');
-
-    if (day.isBefore(currentDayOnly)) {
-      return 1; // Past
-    } else if (day.isAtSameMomentAs(currentDayOnly)) {
-      return 2; // Present
-    } else {
-      return 0; // Future
-    }
+  // Tính tuần trong năm (tuần thứ mấy)
+  int getWeekOfYear(DateTime date) {
+    DateTime firstDayOfYear = DateTime(date.year, 1, 1);
+    int firstDayOfYearWeekday = firstDayOfYear.weekday;
+    int daysSinceStartOfYear = date.difference(firstDayOfYear).inDays;
+    int weekOfYear =
+        ((daysSinceStartOfYear + firstDayOfYearWeekday - 1) / 7).floor() + 1;
+    return weekOfYear;
   }
 
-  // Get the color for the node based on the status
-  Color _getColorForNode(int status) {
-    switch (status) {
-      case 1:
-        return Colors.blue[300]!; // Past
-      case 2:
-        return Colors.green[400]!; // Present
-      default:
-        return Colors.grey[200]!; // Future
+  // Tạo danh sách các ngày trong tuần từ ngày bắt đầu
+  List<DateTime> _generateWeek(DateTime startDate) {
+    developer.log('Generating week starting from: ${startDate}',
+        name: 'WeekCalendar');
+
+    List<DateTime> week = [];
+    for (int i = 0; i < 7; i++) {
+      week.add(startDate.add(Duration(days: i))); // Thêm từng ngày trong tuần
     }
+
+    return week;
   }
 
-  Widget _buildDayNode(DateTime? day, double size) {
-    if (day == null) {
-      return Container(
-        width: size,
-        height: size,
-        margin: const EdgeInsets.all(4.0),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.grey[300],
-        ),
-      );
-    }
-
-    int status = _getDayStatus(day);
+  // Tạo node cho từng ngày trong tuần
+  Widget _buildDayNode(DateTime day, double size) {
+    int status = _getDayStatus(
+        day); // Tính trạng thái ngày (quá khứ, hiện tại, tương lai)
 
     return Container(
       width: size,
       height: size,
-      margin: const EdgeInsets.all(4.0), // Spacing between nodes
+      margin: const EdgeInsets.all(4.0), // Khoảng cách giữa các node
       decoration: BoxDecoration(
-        shape: BoxShape.circle, // Circular shape
-        color: _getColorForNode(status), // Apply color based on status
-        border: Border.all(
-          color: Colors.black, // Apply border for all nodes
-          width: 2,
-        ),
+        shape: BoxShape.circle, // Hình tròn cho các node
+        color: _getColorForNode(status), // Màu sắc tùy thuộc vào trạng thái
+        boxShadow: status == 2
+            ? [
+                BoxShadow(
+                  color: Colors.greenAccent.withOpacity(0.6),
+                  blurRadius: 10,
+                  spreadRadius: 2,
+                )
+              ]
+            : [],
       ),
       alignment: Alignment.center,
       child: Text(
@@ -121,81 +104,31 @@ class MonthCalendar extends StatelessWidget {
     );
   }
 
-  List<List<DateTime?>> _generateMonthWeeks(DateTime month) {
-    developer.log('Generating weeks for month: ${month.month}',
-        name: 'MonthCalendar');
+  // Xác định trạng thái của ngày (quá khứ, hiện tại, tương lai)
+  int _getDayStatus(DateTime day) {
+    DateTime today = DateTime.now();
+    DateTime currentDayOnly = DateTime(today.year, today.month, today.day);
 
-    DateTime firstDayOfMonth = DateTime(month.year, month.month, 1);
-    int daysInMonth = DateTime(month.year, month.month + 1, 0).day;
+    developer.log('Checking day: $day, today: $today', name: 'WeekCalendar');
 
-    // Calculate the first Monday of the month
-    int weekdayOfFirstDay = firstDayOfMonth.weekday;
-    int daysToSubtract = (weekdayOfFirstDay == 7) ? 6 : weekdayOfFirstDay - 1;
-    DateTime firstMondayOfMonth =
-        firstDayOfMonth.subtract(Duration(days: daysToSubtract));
-
-    List<List<DateTime?>> weeks = [];
-    List<DateTime?> currentWeek = [];
-
-    // Calculate empty nodes before the first Monday of the month if necessary
-    for (int i = 0; i < daysToSubtract; i++) {
-      currentWeek.add(null); // Add empty nodes for days before the first Monday
+    if (day.isBefore(currentDayOnly)) {
+      return 1; // Quá khứ
+    } else if (day.isAtSameMomentAs(currentDayOnly)) {
+      return 2; // Hiện tại
+    } else {
+      return 0; // Tương lai
     }
-
-    // Generate the days of the month
-    for (int i = 1; i <= daysInMonth; i++) {
-      DateTime currentDay = DateTime(month.year, month.month, i);
-      currentWeek.add(currentDay);
-
-      if (currentWeek.length == 7) {
-        weeks.add(List.from(currentWeek)); // Add the week to the weeks list
-        currentWeek.clear(); // Reset the current week
-      }
-    }
-
-    // Fill the remaining empty days in the last week
-    while (currentWeek.length < 7) {
-      currentWeek
-          .add(null); // Fill with null for days after the last day of the month
-    }
-    if (currentWeek.isNotEmpty) weeks.add(currentWeek); // Add the final week
-
-    developer.log('Completed generating weeks for month: ${month.month}',
-        name: 'MonthCalendar');
-    return weeks;
   }
 
-  // Create weekday headers (Mon -> Sun)
-  List<Widget> _buildWeekdayHeaders(double size) {
-    const List<String> weekdays = [
-      "Mon",
-      "Tue",
-      "Wed",
-      "Thu",
-      "Fri",
-      "Sat",
-      "Sun"
-    ];
-    return weekdays
-        .map(
-          (day) => Container(
-            width: size,
-            height: size / 2.5,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              border: Border.all(
-                  color: Colors.black, width: 1), // Add border for headers
-            ),
-            child: Text(
-              day,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.black54,
-              ),
-            ),
-          ),
-        )
-        .toList();
+  // Xác định màu sắc cho node dựa trên trạng thái
+  Color _getColorForNode(int status) {
+    switch (status) {
+      case 1:
+        return Colors.blue[300]!; // Quá khứ
+      case 2:
+        return Colors.green[400]!; // Hiện tại
+      default:
+        return Colors.grey[200]!; // Tương lai
+    }
   }
 }
