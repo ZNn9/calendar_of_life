@@ -37,14 +37,10 @@ class CalendarOfYourLifeScreen extends StatelessWidget {
                       }
 
                       final currentView = calendarController.optionTrue.value;
-                      final ageStop =
-                          calendarController.ageStop.value; // Now used
 
                       switch (currentView) {
                         case 'life':
                           return LifeCalendar(
-                            ageStop: ageStop,
-                            currentAge: calendarController.currentAge.value,
                             maxWidth: constraints.maxWidth,
                           );
                         case 'year':
@@ -53,7 +49,6 @@ class CalendarOfYourLifeScreen extends StatelessWidget {
                           );
                         case 'month':
                           return MonthCalendar(
-                            month: DateTime.now(),
                             maxWidth: MediaQuery.of(context).size.width,
                           ); // Implement this
                         case 'week':

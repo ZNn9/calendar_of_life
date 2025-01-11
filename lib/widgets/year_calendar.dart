@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:developer' as developer;
+import 'package:calendar_of_life/controllers/calendar_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class YearCalendar extends StatelessWidget {
+  var calendarController = Get.find<CalendarController>();
   final double maxWidth;
 
-  const YearCalendar({
+  YearCalendar({
     Key? key,
     required this.maxWidth,
   }) : super(key: key);
@@ -14,7 +17,7 @@ class YearCalendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<List<int>>>(
-      future: compute(_calculateYearCalendar, DateTime.now()),
+      future: calendarController.calculateYearCalendarAsync(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -99,14 +102,13 @@ class YearCalendar extends StatelessWidget {
             height: circleSize,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: _getColorForNode(yearCalendar[month][node]),
+              color:
+                  calendarController.getColorForNode(yearCalendar[month][node]),
               border: Border.all(color: seasonColors[seasonIndex], width: 2),
               boxShadow: yearCalendar[month][node] == 2
                   ? [
                       BoxShadow(
-                        color: Colors.greenAccent.withOpacity(0.6),
-                        blurRadius: 10,
-                        spreadRadius: 2,
+                        color: Colors.greenAccent,
                       )
                     ]
                   : [],
@@ -117,49 +119,5 @@ class YearCalendar extends StatelessWidget {
         );
       },
     );
-  }
-
-  static Future<List<List<int>>> _calculateYearCalendar(DateTime now) async {
-    developer.log('Bắt đầu xây dựng GridView Year Calendar',
-        name: 'YearCalendar');
-
-    List<List<int>> yearCalendar = List.generate(
-      12, // 12 tháng
-      (month) => List.generate(6, (node) => 0),
-    );
-
-    int currentMonth = now.month - 1;
-    int currentNode =
-        ((now.day - 1) / (getDaysInMonth(now.year, now.month) / 6)).floor();
-
-    for (int month = 0; month < 12; month++) {
-      for (int node = 0; node < 6; node++) {
-        if (month < currentMonth ||
-            (month == currentMonth && node < currentNode)) {
-          yearCalendar[month][node] = 1;
-        }
-        if (month == currentMonth && node == currentNode) {
-          yearCalendar[month][node] = 2;
-        }
-      }
-    }
-    return yearCalendar;
-  }
-
-  static int getDaysInMonth(int year, int month) {
-    DateTime firstDayNextMonth = DateTime(year, month + 1, 1);
-    DateTime lastDayThisMonth = firstDayNextMonth.subtract(Duration(days: 1));
-    return lastDayThisMonth.day;
-  }
-
-  Color _getColorForNode(int status) {
-    switch (status) {
-      case 1:
-        return Colors.blue[300]!;
-      case 2:
-        return Colors.green[400]!;
-      default:
-        return Colors.grey[200]!;
-    }
   }
 }
