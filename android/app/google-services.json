@@ -7,31 +7,33 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1001415118047:android:6e6d2d01be6fca20782d6a",
-        "android_client_info": {
-          "package_name": "com.branch.calendaroflife"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCadm_yplmKNC8TI5nigBfQGaIgd4rK0Rc"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:1001415118047:android:af2b9231b664570e782d6a",
         "android_client_info": {
           "package_name": "com.example.calendar_of_life"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1001415118047-osq7l9360tjipevjddnuel9ct082lpct.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.calendar_of_life",
+            "certificate_hash": "95bd6bd2f2a4fdc96d7955cba97339163dbdc61a"
+          }
+        },
+        {
+          "client_id": "1001415118047-t4h722ljsqkc7nc4ce8hemspsosa4fm0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.calendar_of_life",
+            "certificate_hash": "b5feacc35553839aff5c30dd5dddb813c1467223"
+          }
+        },
+        {
+          "client_id": "1001415118047-5vac5u8b7vlns8buin6h2cnq7vukdii3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCadm_yplmKNC8TI5nigBfQGaIgd4rK0Rc"
@@ -39,7 +41,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1001415118047-5vac5u8b7vlns8buin6h2cnq7vukdii3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1001415118047-420j13pb7bfaf2qshist9rv3h3k0gki0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.calendarOfLiife"
+              }
+            }
+          ]
         }
       }
     }
