@@ -23,9 +23,9 @@ class CalendarController extends GetxController {
   void onInit() {
     super.onInit();
     // Test
-    String dateString = "2002,01,02";
-    DateTime parsedDate = DateFormat("yyyy,MM,dd").parse(dateString);
-    birthDate.value = parsedDate;
+    // String dateString = "2002,01,02";
+    // DateTime parsedDate = DateFormat("yyyy,MM,dd").parse(dateString);
+    // birthDate.value = parsedDate;
 
     updateCurrentAge();
   }
@@ -123,6 +123,7 @@ class CalendarController extends GetxController {
     int daysLived = date.difference(birthDate).inDays;
     return (daysLived / 7).floor();
   }
+  // Calendar Man
 
   // Year Calendar
   Future<List<List<int>>> calculateYearCalendarAsync() async {

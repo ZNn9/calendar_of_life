@@ -1,4 +1,5 @@
 import 'package:calendar_of_life/screens/google_calendar_screen.dart'; // Màn hình chính xử lý Calendar
+import 'package:calendar_of_life/widgets/main_bottom_navigation_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _navigateToGoogleCalendarScreen() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const GoogleCalendarScreen()),
+      MaterialPageRoute(builder: (context) => MainBottomNavigationBar()),
     );
   }
 

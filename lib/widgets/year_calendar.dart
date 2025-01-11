@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 
 class YearCalendar extends StatelessWidget {
   var calendarController = Get.find<CalendarController>();
+  var screenWidth;
   final double maxWidth;
 
   YearCalendar({
@@ -16,6 +17,9 @@ class YearCalendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
+
     return FutureBuilder<List<List<int>>>(
       future: calendarController.calculateYearCalendarAsync(),
       builder: (context, snapshot) {
@@ -24,26 +28,28 @@ class YearCalendar extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Center(child: Text('Lỗi: ${snapshot.error}'));
         } else if (snapshot.hasData) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: Text(
-                  '${DateTime.now().year}',
-                  style: TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue[800],
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    '${DateTime.now().year}',
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue[800],
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                width: maxWidth,
-                height: 600,
-                child: _buildYearGrid(snapshot.data!),
-              ),
-            ],
+                SizedBox(
+                  width: maxWidth,
+                  height: screenHeight * 0.7, // Use 70% of screen height
+                  child: _buildYearGrid(snapshot.data!),
+                ),
+              ],
+            ),
           );
         } else {
           return const Center(child: Text('Không có dữ liệu'));
@@ -81,11 +87,11 @@ class YearCalendar extends StatelessWidget {
     return GridView.builder(
       padding: const EdgeInsets.all(15.0),
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 6,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: screenWidth ~/ 60,
         childAspectRatio: 1,
         mainAxisSpacing: 8,
-        crossAxisSpacing: 22,
+        crossAxisSpacing: 25,
       ),
       itemCount: 12 * 6,
       itemBuilder: (context, index) {

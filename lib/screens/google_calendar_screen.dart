@@ -1,5 +1,5 @@
-import 'package:calendar_of_life/views/update_user_info.dart';
-import 'package:calendar_of_life/views/userinfo.dart';
+import 'package:calendar_of_life/screens/update_user_info.dart';
+import 'package:calendar_of_life/screens/userinfo.dart';
 import 'package:flutter/material.dart';
 import 'package:googleapis/calendar/v3.dart' as GoogleAPI;
 import 'package:http/http.dart' as http;

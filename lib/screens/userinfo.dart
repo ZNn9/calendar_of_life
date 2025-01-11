@@ -1,13 +1,16 @@
-import 'package:calendar_of_life/views/update_user_info.dart';
-import 'package:calendar_of_life/views/user_info_provider.dart';
+import 'package:calendar_of_life/controllers/calendar_controller.dart';
+import 'package:calendar_of_life/screens/update_user_info.dart';
+import 'package:calendar_of_life/screens/user_info_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class UserInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userInfo = Provider.of<UserInfoProvider>(context);
-
+    CalendarController calendarController = Get.find<CalendarController>();
+    calendarController.setBirthDate(userInfo.birthDate as DateTime);
     return Scaffold(
       appBar: AppBar(title: Text('User Information')),
       body: Padding(
@@ -19,15 +22,18 @@ class UserInfoScreen extends StatelessWidget {
             SizedBox(height: 10),
             Text("Phone: ${userInfo.phone}", style: TextStyle(fontSize: 20)),
             SizedBox(height: 10),
-            Text("Address: ${userInfo.address}", style: TextStyle(fontSize: 20)),
+            Text("Address: ${userInfo.address}",
+                style: TextStyle(fontSize: 20)),
             SizedBox(height: 10),
-            Text("Birth Date: ${userInfo.birthDate}", style: TextStyle(fontSize: 20)),  // Hiển thị ngày sinh
+            Text("Birth Date: ${userInfo.birthDate}",
+                style: TextStyle(fontSize: 20)), // Hiển thị ngày sinh
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => UpdateUserInfoScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => UpdateUserInfoScreen()),
                 );
               },
               child: Text("Update Information"),
