@@ -1,5 +1,4 @@
-import 'package:calendar_of_life/views/home_page.dart';
-import 'package:calendar_of_life/views/google_calendar_screen.dart'; // Màn hình chính xử lý Calendar
+import 'package:calendar_of_life/screens/google_calendar_screen.dart'; // Màn hình chính xử lý Calendar
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
-    clientId: '1001415118047-5vac5u8b7vlns8buin6h2cnq7vukdii3.apps.googleusercontent.com',
+    clientId:
+        '1001415118047-5vac5u8b7vlns8buin6h2cnq7vukdii3.apps.googleusercontent.com',
     scopes: <String>[
       'email',
       'https://www.googleapis.com/auth/calendar', // Quyền truy cập Calendar
