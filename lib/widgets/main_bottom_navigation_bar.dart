@@ -30,14 +30,15 @@ class MainBottomNavigationBar extends StatelessWidget {
         () => BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
+              icon: Icon(Icons.calendar_month),
               activeIcon: Icon(Icons.calendar_month, color: Colors.blue),
               label: 'Calendar',
               backgroundColor: Colors.white,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person_outlined),
-              activeIcon: Icon(Icons.calendar_today, color: Colors.blue),
+              icon: Icon(Icons.perm_contact_calendar_outlined),
+              activeIcon: Icon(Icons.perm_contact_calendar_outlined,
+                  color: Colors.blue),
               label: 'Life Calendar',
               backgroundColor: Colors.white,
             ),
