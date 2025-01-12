@@ -1,6 +1,7 @@
+import 'package:calendar_of_life/models/user.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'user_info_provider.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class UpdateUserInfoScreen extends StatefulWidget {
   @override
@@ -9,19 +10,20 @@ class UpdateUserInfoScreen extends StatefulWidget {
 
 class _UpdateUserInfoScreenState extends State<UpdateUserInfoScreen> {
   final _formKey = GlobalKey<FormState>();
-  String _name = '';
-  String _phone = '';
-  String _address = '';
-  String _birthDate = ''; // Thêm trường ngày sinh
+  final UserInfoController userInfoController = Get.find<UserInfoController>();
+
+  late String _name;
+  late int _age;
+  late int _ageStop;
+  late String _birthDate;
 
   @override
   void initState() {
     super.initState();
-    final userInfo = Provider.of<UserInfoProvider>(context, listen: false);
-    _name = userInfo.name;
-    _phone = userInfo.phone;
-    _address = userInfo.address;
-    _birthDate = userInfo.birthDate; // Lấy ngày sinh từ Provider
+    _name = userInfoController.user.value.name ?? "";
+    _age = userInfoController.user.value.age ?? 0;
+    _ageStop = userInfoController.user.value.ageStop ?? 0;
+    _birthDate = userInfoController.user.value.birthDate ?? "";
   }
 
   @override
@@ -42,28 +44,6 @@ class _UpdateUserInfoScreenState extends State<UpdateUserInfoScreen> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your name';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                initialValue: _phone,
-                decoration: InputDecoration(labelText: 'Phone'),
-                onSaved: (value) => _phone = value ?? '',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your phone number';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                initialValue: _address,
-                decoration: InputDecoration(labelText: 'Address'),
-                onSaved: (value) => _address = value ?? '',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your address';
                   }
                   return null;
                 },
@@ -104,18 +84,14 @@ class _UpdateUserInfoScreenState extends State<UpdateUserInfoScreen> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    Provider.of<UserInfoProvider>(context, listen: false)
-                        .updateUserInfo(
-                            name: _name,
-                            phone: _phone,
-                            address: _address,
-                            birthDate:
-                                _birthDate); // Cập nhật thông tin bao gồm ngày sinh
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Information Updated')),
+                    userInfoController.updateUserInfo(
+                      id: userInfoController.user.value.id ?? 0,
+                      name: _name,
+                      birthDate: _birthDate,
                     );
-                    Navigator.pop(context);
+
+                    Get.snackbar('Success', 'Information Updated');
+                    Get.back();
                   }
                 },
                 child: Text('Save'),

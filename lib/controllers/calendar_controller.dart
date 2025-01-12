@@ -59,7 +59,7 @@ class CalendarController extends GetxController {
     updateCurrentAge();
   }
 
-  void updateCurrentAge() {
+   int updateCurrentAge() {
     if (birthDate.value != null) {
       DateTime timeTamp = DateTime.now();
 
@@ -67,17 +67,16 @@ class CalendarController extends GetxController {
       int age = timeTamp.year - birthDate.value!.year;
 
       // Nếu sinh nhật trong năm chưa qua, trừ 1 tuổi
-      if (timeTamp.month >= birthDate.value!.month) {
-        if ((timeTamp.month == birthDate.value!.month &&
-            timeTamp.day >= birthDate.value!.day)) {
-          currentAge.value = age;
-          return;
-        }
+      if (timeTamp.month < birthDate.value!.month ||
+          (timeTamp.month == birthDate.value!.month &&
+              timeTamp.day < birthDate.value!.day)) {
         age--;
       }
       currentAge.value = age;
     }
+    return currentAge.value; // Trả về giá trị tuổi
   }
+  
 
   // Life Calendar
   Future<List<List<int>>> calculateLifeCalendarAsync() async {
