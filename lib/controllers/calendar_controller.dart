@@ -22,12 +22,7 @@ class CalendarController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // Test
-    // String dateString = "2002,01,02";
-    // DateTime parsedDate = DateFormat("yyyy,MM,dd").parse(dateString);
-    // birthDate.value = parsedDate;
-
-    updateCurrentAge();
+    // updateCurrentAge();
   }
 
   Color getColorForNode(int status) {
@@ -59,7 +54,7 @@ class CalendarController extends GetxController {
     updateCurrentAge();
   }
 
-   int updateCurrentAge() {
+  int updateCurrentAge() {
     if (birthDate.value != null) {
       DateTime timeTamp = DateTime.now();
 
@@ -76,7 +71,6 @@ class CalendarController extends GetxController {
     }
     return currentAge.value; // Trả về giá trị tuổi
   }
-  
 
   // Life Calendar
   Future<List<List<int>>> calculateLifeCalendarAsync() async {
@@ -106,7 +100,7 @@ class CalendarController extends GetxController {
         weekNow++;
 
         if (x < currentAgeValue ||
-            (x == currentAgeValue && weekNow <= currentWeek)) {
+            (x == currentAgeValue && weekNow < currentWeek)) {
           lifeCalendar[x][y] = 1;
         }
         if (x == currentAgeValue && weekNow == currentWeek) {
