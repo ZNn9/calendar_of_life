@@ -1,3 +1,4 @@
+import 'package:calendar_of_life/services/api_life_calendar_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -5,10 +6,13 @@ import 'package:intl/intl.dart';
 import 'dart:developer' as developer;
 
 class CalendarController extends GetxController {
+  final ApiLifeCalendarService apiLifeCalendarService =
+      ApiLifeCalendarService();
+
   Rx<DateTime?> birthDate = Rx<DateTime?>(null);
   var optionTrue = "life".obs;
   var isLoading = false.obs; // Thêm biến loading, chưa thành công
-  var ageStop = 50.obs;
+  var ageStop = 100.obs;
   var currentAge = 0.obs; //Test
 
   var optionCalendar = {
@@ -74,47 +78,21 @@ class CalendarController extends GetxController {
 
   // Life Calendar
   Future<List<List<int>>> calculateLifeCalendarAsync() async {
-    return compute(_generateLifeCalendarInIsolate, {
-      'ageStop': ageStop.value,
-      'currentAge': currentAge.value,
-      'birthDate': birthDate.value,
-      'now': DateTime.now(),
-    });
-  }
-
-  static List<List<int>> _generateLifeCalendarInIsolate(
-      Map<String, dynamic> params) {
-    int ageStopValue = params['ageStop'] as int;
-    int currentAgeValue = params['currentAge'] as int;
-    DateTime birthDateValue = params['birthDate'] as DateTime;
-    DateTime now = params['now'] as DateTime;
-
-    int currentWeek = _calculateCurrentWeek(now, birthDateValue);
-
-    List<List<int>> lifeCalendar =
-        List.generate(ageStopValue, (x) => List.generate(52, (y) => 0));
-
-    int weekNow = 0;
-    for (int x = 0; x < ageStopValue; x++) {
-      for (int y = 0; y < 52; y++) {
-        weekNow++;
-
-        if (x < currentAgeValue ||
-            (x == currentAgeValue && weekNow < currentWeek)) {
-          lifeCalendar[x][y] = 1;
-        }
-        if (x == currentAgeValue && weekNow == currentWeek) {
-          lifeCalendar[x][y] = 2;
-        }
-      }
+    try {
+      isLoading.value = true;
+      return compute(apiLifeCalendarService.generateLifeCalendar, {
+        "ageStop": ageStop.value,
+        "currentAge": currentAge.value,
+        "birthDate": birthDate.value!,
+        "now": DateTime.now(),
+      });
+    } catch (e) {
+      Get.snackbar("Error", "Failed to generate life calendar: $e",
+          snackPosition: SnackPosition.BOTTOM);
+      return [];
+    } finally {
+      isLoading.value = false;
     }
-
-    return lifeCalendar;
-  }
-
-  static int _calculateCurrentWeek(DateTime date, DateTime birthDate) {
-    int daysLived = date.difference(birthDate).inDays;
-    return (daysLived / 7).floor();
   }
   // Calendar Man
 
