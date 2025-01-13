@@ -94,9 +94,13 @@ class CalendarController extends GetxController {
       isLoading.value = false;
     }
   }
-  // Calendar Man
 
   // Year Calendar
+  // Future<List<List<int>>> calculateYearCalendarAsync() async {
+  //   return compute(
+  //       apiLifeCalendarService.generateYearCalendar, {"data", false});
+  // }
+
   Future<List<List<int>>> calculateYearCalendarAsync() async {
     return compute(_generateYearCalendarInIsolate, {
       "now": DateTime.now(),
